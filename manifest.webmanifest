@@ -1,0 +1,29 @@
+{
+  "name": "Delirium y Abstinencia HCFB",
+  "short_name": "Delirium HCFB",
+  "description": "4AT, CAM, EVA, causas, abstinencia, manejo farmacológico y registro de visitas QR para el Hospital Clínico Félix Bulnes.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f3f3",
+  "theme_color": "#135e9d",
+  "lang": "es-CL",
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

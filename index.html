@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#135e9d" />
+  <meta name="description" content="Aplicación clínica de apoyo para 4AT, CAM, EVA, flujograma de delirium, revisión de causas y registro de visitas por QR." />
+  <title>Delirium HCFB</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand-lockup">
+        <img class="institutional-logo" src="./assets/logo-felix-bulnes-oficial.png" alt="Hospital Clínico Félix Bulnes" />
+        <div class="app-title-block">
+          <div class="eyebrow">Programa clínico institucional</div>
+          <h1>Delirium y abstinencia hospitalaria</h1>
+        </div>
+      </div>
+      <button id="themeToggle" class="icon-button" aria-label="Cambiar tema">◐</button>
+    </header>
+
+    <main>
+      <section id="inicio" class="view active">
+        <article class="hero card">
+          <div>
+            <span class="pill">PWA · funciona offline</span>
+            <h2>4AT, CAM, EVA, flujograma, causas y QR</h2>
+            <p>Herramienta clínica móvil para tamizar delirium, confirmar hallazgos, orientar manejo inicial, revisar causas y registrar visitas en la unidad.</p>
+          </div>
+          <div class="hero-score">4AT<br><strong>CAM</strong><br>EVA</div>
+        </article>
+
+        <div class="alert warning">
+          <strong>Herramienta de apoyo.</strong> No reemplaza la valoración clínica, el diagnóstico médico ni los protocolos institucionales vigentes.
+        </div>
+
+        <div class="quick-grid quick-grid-3">
+          <button class="quick-card" data-go="evaluacion" data-tab="tab4at"><span>01</span><strong>Aplicar 4AT</strong><small>Tamizaje claro y paso a paso</small></button>
+          <button class="quick-card" data-go="evaluacion" data-tab="tabcam"><span>02</span><strong>Aplicar CAM</strong><small>Características, frases y orientación visual</small></button>
+          <button class="quick-card" data-go="evaluacion" data-tab="tabeva"><span>03</span><strong>Valorar EVA</strong><small>Dolor y reevaluación</small></button>
+          <button class="quick-card" data-go="flujo"><span>04</span><strong>Ver flujograma</strong><small>Qué hacer en cada resultado</small></button>
+          <button class="quick-card" data-go="causas" data-manage-tab="tabcausas"><span>05</span><strong>Revisar causas</strong><small>Búsqueda estructurada de precipitantes</small></button>
+          <button class="quick-card" data-go="causas" data-manage-tab="tababstinencia"><span>06</span><strong>Abstinencia</strong><small>Alcohol, BZD, opioides y sedoanalgesia</small></button>
+          <button class="quick-card" data-go="causas" data-manage-tab="tabfarmacos"><span>07</span><strong>Fármacos</strong><small>Qué considerar y precauciones</small></button>
+          <button class="quick-card" data-go="qr"><span>08</span><strong>Leer QR</strong><small>Asistencia y visita</small></button>
+        </div>
+
+        <article class="card">
+          <h3>Resumen del flujo</h3>
+          <ol class="mini-flow">
+            <li><b>4AT universal</b> al ingreso y según nivel de riesgo.</li>
+            <li><b>4AT 1–3:</b> buscar basal, revisar causas y aumentar frecuencia de evaluación.</li>
+            <li><b>4AT ≥ 4:</b> aplicar CAM, confirmar sospecha clínica y activar conducta.</li>
+            <li><b>Siempre:</b> medidas preventivas no farmacológicas.</li>
+          </ol>
+        </article>
+      </section>
+
+      <section id="evaluacion" class="view">
+        <div class="section-head">
+          <div><div class="eyebrow">Instrumentos</div><h2>Evaluación clínica</h2></div>
+        </div>
+
+        <div class="tabs" role="tablist">
+          <button class="tab active" data-tab-target="tab4at">4AT</button>
+          <button class="tab" data-tab-target="tabcam">CAM</button>
+          <button class="tab" data-tab-target="tabeva">EVA</button>
+        </div>
+
+        <div id="tab4at" class="tab-panel active">
+          <article class="card intro-card">
+            <h3>¿Qué es el 4AT?</h3>
+            <p>Es un instrumento breve para detectar <b>delirium</b> y posible <b>deterioro cognitivo</b>. Suma 4 dominios: alerta, orientación AMT4, atención y cambio agudo/fluctuante.</p>
+            <div class="legend-grid compact">
+              <div class="legend-card"><strong>0 puntos</strong><small>Delirium o deterioro severo poco probable</small></div>
+              <div class="legend-card amber"><strong>1–3 puntos</strong><small>Posible deterioro cognitivo y/o riesgo de delirium</small></div>
+              <div class="legend-card red"><strong>≥ 4 puntos</strong><small>Posible delirium ± deterioro cognitivo</small></div>
+            </div>
+          </article>
+
+          <form id="form4at">
+            <article class="card">
+              <h3>Identificación mínima</h3>
+              <div class="form-grid">
+                <label>Código o iniciales<input name="patientCode" maxlength="20" placeholder="Ej.: JM-01" /></label>
+                <label>Cama<input name="bed" maxlength="10" placeholder="Ej.: D37" /></label>
+              </div>
+              <p class="hint">Evita ingresar nombre completo, RUT u otros datos sensibles.</p>
+            </article>
+
+            <article class="card question-card enhanced">
+              <div class="question-number">1</div>
+              <div>
+                <div class="question-head">
+                  <h3>Alerta</h3>
+                  <div class="mini-icon">👁️</div>
+                </div>
+                <p><b>Qué observar:</b> estado de vigilia, somnolencia marcada, agitación, hiperalerta o dificultad evidente para mantener el contacto.</p>
+                <div class="tip-box">Si el paciente está <b>claramente anormal</b> en cualquier momento de la evaluación, este ítem puntúa <b>4</b>.</div>
+                <label class="radio-row"><input type="radio" name="alertness" value="0" checked /> Normal, sin somnolencia o agitación anormal <b>0</b></label>
+                <label class="radio-row"><input type="radio" name="alertness" value="4" /> Claramente anormal (muy somnoliento, agitado o hiperalerta) <b>4</b></label>
+              </div>
+            </article>
+
+            <article class="card question-card enhanced">
+              <div class="question-number">2</div>
+              <div>
+                <div class="question-head">
+                  <h3>AMT4</h3>
+                  <div class="mini-icon">🧠</div>
+                </div>
+                <p><b>Preguntar textualmente:</b> “¿Qué edad tiene?”, “¿Cuál es su fecha de nacimiento?”, “¿En qué lugar estamos?”, “¿En qué año estamos?”</p>
+                <div class="tip-box">Cuenta los errores. Si no se puede evaluar, usa la alternativa correspondiente.</div>
+                <label class="radio-row"><input type="radio" name="amt4" value="0" checked /> Sin errores <b>0</b></label>
+                <label class="radio-row"><input type="radio" name="amt4" value="1" /> Un error <b>1</b></label>
+                <label class="radio-row"><input type="radio" name="amt4" value="2" /> Dos o más errores o no evaluable <b>2</b></label>
+              </div>
+            </article>
+
+            <article class="card question-card enhanced">
+              <div class="question-number">3</div>
+              <div>
+                <div class="question-head">
+                  <h3>Atención</h3>
+                  <div class="mini-icon">📅</div>
+                </div>
+                <p><b>Indicación sugerida:</b> “Dígame los meses del año al revés, comenzando por diciembre”.</p>
+                <div class="tip-box">Si inicia pero se pierde, se detiene o se niega, puntúa <b>1</b>. Si no se puede valorar en absoluto, puntúa <b>2</b>.</div>
+                <label class="radio-row"><input type="radio" name="attention" value="0" checked /> Logra 7 o más meses correctos <b>0</b></label>
+                <label class="radio-row"><input type="radio" name="attention" value="1" /> Inicia, pero logra menos de 7; se niega o se distrae <b>1</b></label>
+                <label class="radio-row"><input type="radio" name="attention" value="2" /> No evaluable <b>2</b></label>
+              </div>
+            </article>
+
+            <article class="card question-card enhanced">
+              <div class="question-number">4</div>
+              <div>
+                <div class="question-head">
+                  <h3>Cambio agudo o curso fluctuante</h3>
+                  <div class="mini-icon">🔄</div>
+                </div>
+                <p><b>Pregunta clave al equipo o familia:</b> “¿Ha habido un cambio importante en el estado mental respecto de lo habitual?” y “¿Ese cambio ha ido variando en las últimas 24 horas?”</p>
+                <div class="tip-box">Puntúa <b>4</b> cuando existe cambio significativo reciente y aún presente o fluctuante.</div>
+                <label class="radio-row"><input type="radio" name="acuteChange" value="0" checked /> No hay evidencia de cambio agudo / fluctuación <b>0</b></label>
+                <label class="radio-row"><input type="radio" name="acuteChange" value="4" /> Sí, existe cambio agudo y/o fluctuación reciente <b>4</b></label>
+              </div>
+            </article>
+
+            <article id="result4at" class="result-card low">
+              <div><span>Puntaje 4AT</span><strong id="score4at">0</strong></div>
+              <div><h3 id="title4at">Delirium poco probable</h3><p id="text4at">Mantener prevención y vigilancia clínica.</p></div>
+            </article>
+
+            <div class="alert info"><b>Interpretación rápida:</b> 0 = poco probable; 1–3 = posible deterioro / reevaluar y revisar causas; ≥4 = posible delirium, aplicar CAM y actuar.</div>
+
+            <div class="actions">
+              <button type="button" class="secondary" id="reset4at">Limpiar</button>
+              <button type="submit" class="primary">Guardar evaluación</button>
+            </div>
+          </form>
+        </div>
+
+        <div id="tabcam" class="tab-panel">
+          <article class="card intro-card">
+            <h3>¿Cómo interpretar el CAM?</h3>
+            <p>El CAM es <b>positivo</b> cuando están presentes <b>1 + 2</b> y además <b>3 o 4</b>. Usa las frases guía y ejemplos para decidir mejor cada punto.</p>
+            <div class="cam-algorithm">
+              <span class="alg-box">1. Inicio agudo / fluctuación</span>
+              <span class="alg-plus">+</span>
+              <span class="alg-box">2. Inatención</span>
+              <span class="alg-plus">+</span>
+              <span class="alg-box">3. Pensamiento desorganizado <small>o</small> 4. Conciencia alterada</span>
+              <span class="alg-equals">=</span>
+              <span class="alg-result">CAM positivo</span>
+            </div>
+          </article>
+
+          <form id="formCam">
+            <article class="card">
+              <h3>Identificación mínima</h3>
+              <div class="form-grid">
+                <label>Código o iniciales<input name="patientCode" maxlength="20" placeholder="Ej.: JM-01" /></label>
+                <label>Cama<input name="bed" maxlength="10" placeholder="Ej.: D37" /></label>
+              </div>
+            </article>
+
+            <article class="card">
+              <h3>Características CAM</h3>
+              <div class="cam-feature-grid">
+                <label class="cam-feature-card">
+                  <input type="checkbox" name="f1" />
+                  <div class="cam-feature-body">
+                    <div class="cam-visual">⏱️</div>
+                    <div>
+                      <b>1. Inicio agudo y curso fluctuante</b>
+                      <p><b>Frase guía:</b> “Este paciente está diferente a su estado habitual y ese cambio ha variado durante el día”.</p>
+                      <ul>
+                        <li>Cambio brusco respecto al basal.</li>
+                        <li>Momentos de lucidez intercalados con confusión.</li>
+                        <li>Peor en ciertos horarios, mejora parcial y vuelve a empeorar.</li>
+                      </ul>
+                    </div>
+                  </div>
+                </label>
+
+                <label class="cam-feature-card">
+                  <input type="checkbox" name="f2" />
+                  <div class="cam-feature-body">
+                    <div class="cam-visual">🎯</div>
+                    <div>
+                      <b>2. Inatención</b>
+                      <p><b>Frase guía:</b> “Se distrae, pierde el hilo o no logra concentrarse en la tarea”.</p>
+                      <ul>
+                        <li>No mantiene la mirada ni sigue la conversación.</li>
+                        <li>Se distrae con ruidos o estímulos mínimos.</li>
+                        <li>No logra meses al revés, contar o seguir instrucciones simples.</li>
+                      </ul>
+                    </div>
+                  </div>
+                </label>
+
+                <label class="cam-feature-card">
+                  <input type="checkbox" name="f3" />
+                  <div class="cam-feature-body">
+                    <div class="cam-visual">💬</div>
+                    <div>
+                      <b>3. Pensamiento desorganizado</b>
+                      <p><b>Frase guía:</b> “Responde en forma incoherente, ilógica o cambia de idea sin conexión”.</p>
+                      <ul>
+                        <li>Discurso desordenado o difícil de seguir.</li>
+                        <li>Ideas extrañas, respuestas fuera de contexto.</li>
+                        <li>No comprende la secuencia de preguntas simples.</li>
+                      </ul>
+                    </div>
+                  </div>
+                </label>
+
+                <label class="cam-feature-card">
+                  <input type="checkbox" name="f4" />
+                  <div class="cam-feature-body">
+                    <div class="cam-visual">⚠️</div>
+                    <div>
+                      <b>4. Nivel de conciencia alterado</b>
+                      <p><b>Frase guía:</b> “No está en un estado de alerta normal”.</p>
+                      <ul>
+                        <li>Vigil, letárgico, estuporoso o hiperalerta.</li>
+                        <li>Se duerme durante la entrevista.</li>
+                        <li>Está excesivamente agitado o muy somnoliento.</li>
+                      </ul>
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </article>
+
+            <article id="resultCam" class="result-card low">
+              <div><span>Resultado</span><strong id="camBadge">−</strong></div>
+              <div><h3 id="titleCam">CAM negativo</h3><p id="textCam">Revalorar si persiste la sospecha, porque el delirium puede fluctuar.</p></div>
+            </article>
+
+            <div class="alert info"><b>Si CAM es positivo:</b> notificar al equipo, buscar causas precipitantes, reforzar seguridad, medidas no farmacológicas y reevaluación seriada.</div>
+
+            <div class="actions">
+              <button type="button" class="secondary" id="resetCam">Limpiar</button>
+              <button type="submit" class="primary">Guardar evaluación</button>
+            </div>
+          </form>
+        </div>
+
+        <div id="tabeva" class="tab-panel">
+          <form id="formEva">
+            <article class="card">
+              <h3>Identificación y momento</h3>
+              <div class="form-grid">
+                <label>Código o iniciales<input name="patientCode" maxlength="20" placeholder="Ej.: JM-01" /></label>
+                <label>Cama<input name="bed" maxlength="10" placeholder="Ej.: D37" /></label>
+                <label>Momento
+                  <select name="moment">
+                    <option>Evaluación inicial</option>
+                    <option>Reevaluación</option>
+                    <option>Antes de procedimiento</option>
+                    <option>Después de procedimiento</option>
+                  </select>
+                </label>
+                <label>Intervención previa<input name="intervention" maxlength="80" placeholder="Opcional" /></label>
+              </div>
+            </article>
+
+            <article class="card eva-card">
+              <h3>Escala Visual Análoga</h3>
+              <div class="eva-value"><span id="evaFace">🙂</span><strong id="evaValue">0</strong><small>/10</small></div>
+              <input id="evaSlider" name="eva" type="range" min="0" max="10" step="1" value="0" />
+              <div class="eva-labels"><span>Sin dolor</span><span>Máximo dolor</span></div>
+              <div id="evaInterpretation" class="pain low">Sin dolor</div>
+            </article>
+
+            <div class="actions">
+              <button type="button" class="secondary" id="resetEva">Limpiar</button>
+              <button type="submit" class="primary">Guardar EVA</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="flujo" class="view">
+        <div class="section-head"><div><div class="eyebrow">Protocolo de delirium</div><h2>Flujograma de actuación</h2></div></div>
+
+        <article class="flowchart">
+          <div class="flow-node start"><b>Ingreso / cambio clínico</b><span>Aplicar medidas preventivas a todos</span></div>
+          <div class="arrow">↓</div>
+          <div class="flow-node primary-node"><b>Aplicar 4AT</b><span>Tamizaje universal</span></div>
+          <div class="flow-split">
+            <div class="flow-column">
+              <div class="flow-node green"><b>4AT = 0</b><span>Riesgo bajo</span></div>
+              <div class="arrow">↓</div>
+              <div class="flow-node"><b>Qué hacer</b><span>Medidas preventivas a todos. Reevaluar al menos 1 vez al día y ante cambios.</span></div>
+            </div>
+            <div class="flow-column">
+              <div class="flow-node amber"><b>4AT = 1–3</b><span>Posible deterioro cognitivo / riesgo intermedio</span></div>
+              <div class="arrow">↓</div>
+              <div class="flow-node"><b>Qué hacer</b><span>Buscar el basal, revisar causas precipitantes, reforzar medidas y repetir 4AT con mayor frecuencia.</span></div>
+            </div>
+            <div class="flow-column">
+              <div class="flow-node red"><b>4AT ≥ 4</b><span>Posible delirium</span></div>
+              <div class="arrow">↓</div>
+              <div class="flow-node primary-node"><b>Aplicar CAM</b><span>Evaluación clínica y antecedentes basales</span></div>
+            </div>
+          </div>
+          <div class="arrow">↓</div>
+          <div class="flow-split two">
+            <div class="flow-column">
+              <div class="flow-node green"><b>CAM negativo</b><span>No descarta fluctuación</span></div>
+              <div class="arrow">↓</div>
+              <div class="flow-node"><b>Qué hacer</b><span>Si la sospecha persiste: repetir evaluación, obtener información familiar y seguir búsqueda de causas.</span></div>
+            </div>
+            <div class="flow-column">
+              <div class="flow-node red"><b>CAM positivo</b><span>Delirium probable</span></div>
+              <div class="arrow">↓</div>
+              <div class="flow-node"><b>Qué hacer</b><span>Notificar al equipo, buscar y tratar causas, reforzar medidas de seguridad y reevaluación seriada.</span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Situaciones especiales</h3>
+          <div class="accordion">
+            <details><summary>Paciente no evaluable o muy somnoliento</summary><p>No omitir la evaluación. El 4AT permite puntuar respuestas no evaluables. Correlacionar con sedación, conciencia y situación clínica.</p></details>
+            <details><summary>No hay familiar o informante</summary><p>Clasificar al menos como riesgo moderado en el flujo local, mantener medidas y reevaluación frecuente mientras se intenta obtener el estado basal.</p></details>
+            <details><summary>CAM negativo con alta sospecha</summary><p>El delirium fluctúa. Repita la evaluación, compare con el basal, revise el turno completo y consulte registros del equipo.</p></details>
+            <details><summary>Paciente de UPC o ventilado</summary><p>Utilizar CAM-ICU cuando corresponda al contexto y nivel de comunicación, de acuerdo con el protocolo institucional.</p></details>
+          </div>
+        </article>
+      </section>
+
+      <section id="medidas" class="view">
+        <div class="section-head"><div><div class="eyebrow">Prevención y manejo</div><h2>Medidas no farmacológicas</h2></div><button id="resetMeasures" class="secondary small">Reiniciar</button></div>
+        <p class="hint">Marca las medidas realizadas. El progreso queda guardado en este dispositivo.</p>
+
+        <div id="measuresList" class="measure-list"></div>
+      </section>
+
+
+      <section id="causas" class="view">
+        <div class="section-head"><div><div class="eyebrow">Bundle y tratamiento</div><h2>Causas, abstinencia y farmacología</h2></div></div>
+
+        <div class="tabs management-tabs" role="tablist">
+          <button class="management-tab active" data-manage-target="tabcausas">Causas</button>
+          <button class="management-tab" data-manage-target="tababstinencia">Abstinencia</button>
+          <button class="management-tab" data-manage-target="tabfarmacos">Fármacos</button>
+        </div>
+
+        <div id="tabcausas" class="management-panel active">
+          <article class="card intro-card">
+            <h3>¿Cómo usar esta pestaña?</h3>
+            <p>Revisa sistemáticamente los precipitantes más frecuentes. Cada hallazgo debe terminar en una acción, aviso, tratamiento indicado o justificación. El delirium suele ser multifactorial.</p>
+          </article>
+          <div id="causesList" class="cause-card-list"></div>
+        </div>
+
+        <div id="tababstinencia" class="management-panel">
+          <article class="card intro-card institutional-callout">
+            <h3>Abstinencia hospitalaria</h3>
+            <p>Puede aparecer por suspensión, reducción o falta de acceso a alcohol, benzodiacepinas, hipnóticos tipo Z, opioides, drogas o sedoanalgesia prolongada recibida en UPC. <b>Riesgo de abstinencia no significa abstinencia activa.</b></p>
+          </article>
+
+          <article class="card">
+            <h3>Cuándo sospechar abstinencia activa</h3>
+            <div class="criteria-stack">
+              <div><b>1. Antecedente compatible</b><span>Uso habitual, consumo frecuente o exposición prolongada.</span></div>
+              <div><b>2. Relación temporal</b><span>Síntomas después de hospitalización, suspensión, reducción o falta de acceso.</span></div>
+              <div><b>3. Síntomas compatibles</b><span>Temblor, sudoración, taquicardia, hipertensión, ansiedad, irritabilidad, insomnio, agitación, náuseas/vómitos, alucinaciones, confusión o convulsiones.</span></div>
+            </div>
+            <div class="alert warning"><b>Urgencia:</b> convulsiones, delirium tremens, alucinaciones intensas, agitación grave, hipertermia o inestabilidad hemodinámica requieren evaluación médica y escalamiento inmediato.</div>
+          </article>
+
+          <article class="treatment-card alcohol">
+            <div class="treatment-head"><span class="treatment-icon">🍷</span><div><h3>Alcohol</h3><p>La abstinencia alcohólica puede progresar a convulsiones y delirium tremens.</p></div></div>
+            <div class="treatment-columns">
+              <div><h4>Qué usar / por qué</h4><ul><li><b>Benzodiacepinas:</b> tratamiento farmacológico de primera línea porque controlan hiperactividad autonómica y reducen convulsiones.</li><li><b>Tiamina:</b> administrar precozmente en personas con riesgo nutricional o consumo crónico; no retrasar corrección urgente de hipoglicemia.</li><li>Corregir hidratación, magnesio, potasio, glucosa y otras alteraciones según evaluación.</li></ul></div>
+              <div><h4>Cuidados</h4><ul><li>Elegir esquema y fármaco según gravedad, edad, función hepática, vía disponible y protocolo local.</li><li>Vigilar sedación, depresión respiratoria, aspiración, hipotensión y acumulación.</li><li><b>No usar antipsicóticos como monoterapia</b> para abstinencia alcohólica.</li><li>CIWA-Ar requiere colaboración; no es apropiado como única guía en delirium, intubación o comunicación imposible.</li></ul></div>
+            </div>
+          </article>
+
+          <article class="treatment-card">
+            <div class="treatment-head"><span class="treatment-icon">💊</span><div><h3>Benzodiacepinas e hipnóticos tipo Z</h3><p>Incluye diazepam, clonazepam, lorazepam, alprazolam, oxazepam, zopiclona y zolpidem.</p></div></div>
+            <div class="treatment-columns">
+              <div><h4>Qué hacer</h4><ul><li>Realizar conciliación: dosis habitual, horario y última dosis.</li><li><b>No suspender abruptamente</b> cuando existe uso prolongado o dependencia.</li><li>El médico define continuidad, sustitución por fármaco de vida media más larga o reducción gradual.</li></ul></div>
+              <div><h4>Cuidados</h4><ul><li>La abstinencia puede producir ansiedad intensa, insomnio, temblor, delirium y convulsiones.</li><li>Vigilar sedación acumulativa si se reinicia junto con opioides u otros depresores.</li><li>El plan de reducción debe ser individualizado; no existe una velocidad única para todos.</li></ul></div>
+            </div>
+          </article>
+
+          <article class="treatment-card">
+            <div class="treatment-head"><span class="treatment-icon">🩹</span><div><h3>Opioides</h3><p>La suspensión brusca puede causar síndrome autonómico intenso y dificultar el cuidado.</p></div></div>
+            <div class="treatment-columns">
+              <div><h4>Qué revisar / usar</h4><ul><li>Identificar opioidoterapia crónica, metadona, buprenorfina o exposición prolongada en UPC.</li><li>Evaluar con COWS si el paciente puede colaborar y la herramienta corresponde.</li><li>El médico define continuidad, descenso gradual, sustitución o tratamiento específico.</li></ul></div>
+              <div><h4>Cuidados</h4><ul><li>Buscar midriasis, rinorrea, piloerección, diarrea, vómitos, dolor, inquietud y taquicardia.</li><li>Evitar mezclar opioides con sedantes sin vigilancia por riesgo de depresión respiratoria.</li><li>La abstinencia aislada suele ser muy incómoda; descartar simultáneamente dolor, sepsis u otras causas de agitación.</li></ul></div>
+            </div>
+          </article>
+
+          <article class="treatment-card">
+            <div class="treatment-head"><span class="treatment-icon">🏥</span><div><h3>Sedoanalgesia prolongada desde UPC</h3><p>Considerar midazolam, fentanilo, remifentanilo, propofol, dexmedetomidina u otros recibidos por varios días.</p></div></div>
+            <div class="treatment-columns">
+              <div><h4>Conducta</h4><ul><li>Revisar duración, dosis acumulada y velocidad de suspensión.</li><li>Coordinar un plan de descenso o transición antes del traslado a servicios básicos.</li><li>Registrar claramente el plan pendiente en entrega de turno y epicrisis de traslado.</li></ul></div>
+              <div><h4>Cuidados</h4><ul><li>No atribuir toda agitación a delirium sin revisar abstinencia iatrogénica.</li><li>Vigilar hipertensión, taquicardia, temblor, ansiedad, dolor, diarrea y alteraciones del sueño.</li><li>Requiere coordinación médico-enfermería-farmacia y, cuando corresponda, UPC.</li></ul></div>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>Regla operativa HCFB</h3>
+            <ol class="mini-flow"><li>Registrar antecedente y última dosis/consumo.</li><li>Avisar a enfermería y médico durante el mismo turno.</li><li>Realizar conciliación medicamentosa.</li><li>Aplicar 4AT y CAM si existe alteración mental.</li><li>Clasificar gravedad y definir plan farmacológico médico.</li></ol>
+          </article>
+        </div>
+
+        <div id="tabfarmacos" class="management-panel">
+          <article class="card intro-card institutional-callout">
+            <h3>Principio central</h3>
+            <p>Los fármacos <b>no corrigen la causa ni deben indicarse por todo CAM positivo</b>. Se consideran de forma excepcional cuando hay angustia intensa, agitación severa, riesgo de daño, retiro de dispositivos esenciales o imposibilidad de realizar cuidados, después de tratar causas y probar desescalamiento.</p>
+          </article>
+
+          <div class="alert danger-alert"><b>Indicación exclusivamente médica.</b> Las dosis mostradas provienen del borrador operativo HCFB v8 y deben ser validadas por equipo médico y Farmacia Clínica antes de publicación institucional.</div>
+
+          <article class="med-card featured-med">
+            <div class="med-head"><span>H</span><div><h3>Haloperidol VO/IM</h3><p>Opción de control rápido para agitación moderada-severa con riesgo.</p></div></div>
+            <div class="dose-box"><b>Dosis inicial sugerida en borrador HCFB</b><span>0,5 mg en adulto mayor/frágil; 1 mg en adulto no frágil. Reevaluar a los 30–60 minutos.</span></div>
+            <div class="treatment-columns"><div><h4>Por qué considerarlo</h4><ul><li>Puede disminuir agitación, agresividad o conducta de riesgo a corto plazo.</li><li>No se utiliza para “normalizar” el CAM ni como prevención.</li></ul></div><div><h4>Precauciones clave</h4><ul><li><b>Evitar en Parkinson y demencia con cuerpos de Lewy.</b></li><li>Revisar QTc, arritmias, bradicardia, electrolitos e interacciones.</li><li>Vigilar distonía, rigidez, acatisia, disfagia, sedación y aspiración.</li><li>Usar la menor dosis y el menor tiempo posibles.</li></ul></div></div>
+          </article>
+
+          <article class="med-card">
+            <div class="med-head"><span>R</span><div><h3>Risperidona VO</h3><p>Alternativa oral para agitación leve-moderada cuando el paciente acepta vía oral.</p></div></div>
+            <div class="dose-box"><b>Dosis inicial sugerida en borrador HCFB</b><span>0,25 mg cada 12 h; evaluar 0,5 mg cada 12 h según respuesta.</span></div>
+            <ul class="caution-list"><li>Vigilar sedación, hipotensión ortostática, síntomas extrapiramidales y caídas.</li><li>Revisar función renal, polifarmacia y QT cuando corresponda.</li><li>No utilizar para delirium hipoactivo sin agitación o angustia relevante.</li></ul>
+          </article>
+
+          <article class="med-card">
+            <div class="med-head"><span>Q</span><div><h3>Quetiapina VO</h3><p>Alternativa oral más sedante; puede considerarse en agitación leve-moderada o predominio nocturno.</p></div></div>
+            <div class="dose-box"><b>Dosis inicial sugerida en borrador HCFB</b><span>12,5–25 mg nocte; considerar 12,5–25 mg cada 12 h.</span></div>
+            <ul class="caution-list"><li>Vigilar somnolencia, hipotensión ortostática, caídas y aspiración.</li><li>Menor carga extrapiramidal no significa ausencia de riesgo.</li><li>Evitar sumar sedantes solo para lograr que el paciente “duerma”.</li></ul>
+          </article>
+
+          <article class="med-card">
+            <div class="med-head"><span>O</span><div><h3>Olanzapina VO/ODT</h3><p>Alternativa oral o dispersable cuando la vía oral convencional es difícil.</p></div></div>
+            <div class="dose-box"><b>Dosis inicial sugerida en borrador HCFB</b><span>2,5 mg nocte; considerar 2,5–5 mg/día según respuesta.</span></div>
+            <ul class="caution-list"><li>Vigilar sedación, hipotensión y efectos anticolinérgicos/metabólicos.</li><li><b>Evitar combinación cercana de olanzapina IM con benzodiacepinas parenterales</b> por riesgo cardiorrespiratorio.</li><li>Evaluar riesgo de aspiración y caída.</li></ul>
+          </article>
+
+          <article class="med-card special-med">
+            <div class="med-head"><span>Dx</span><div><h3>Dexmedetomidina</h3><p>No es una alternativa para salas básicas.</p></div></div>
+            <ul class="caution-list"><li>Puede considerarse en UPC para pacientes ventilados cuya agitación impide destete o extubación.</li><li>Requiere monitorización por bradicardia e hipotensión.</li><li>Debe seguir el protocolo específico de sedoanalgesia de UPC.</li></ul>
+          </article>
+
+          <article class="med-card warning-med">
+            <div class="med-head"><span>BZD</span><div><h3>Benzodiacepinas</h3><p>No son tratamiento rutinario del delirium no relacionado con abstinencia.</p></div></div>
+            <ul class="caution-list"><li><b>Sí se consideran</b> en abstinencia de alcohol o benzodiacepinas, convulsiones y situaciones clínicas seleccionadas.</li><li>Fuera de esas indicaciones pueden aumentar sedación, hipoventilación, caídas y empeorar delirium.</li><li>Especial cuidado al combinar con opioides u otros depresores del sistema nervioso central.</li></ul>
+          </article>
+
+          <article class="card">
+            <h3>Checklist antes de indicar o administrar</h3>
+            <div class="precheck-grid">
+              <span>☐ Causas corregibles revisadas</span><span>☐ Desescalamiento intentado</span><span>☐ Riesgo concreto documentado</span><span>☐ Parkinson/Lewy descartado</span><span>☐ ECG/QTc e interacciones revisados</span><span>☐ K⁺/Mg²⁺ corregidos si corresponde</span><span>☐ Conciencia y aspiración evaluadas</span><span>☐ Plan de reevaluación y suspensión</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="qr" class="view">
+        <div class="section-head"><div><div class="eyebrow">Trazabilidad</div><h2>Registro mediante QR</h2></div></div>
+
+        <article class="card profile-summary">
+          <div><h3>Perfil activo</h3><p id="profileSummary">Configura tus datos antes del primer registro.</p></div>
+          <button class="secondary small" data-go="config">Configurar</button>
+        </article>
+
+        <article class="card">
+          <h3>Escanear QR de la unidad</h3>
+          <div id="scannerBox" class="scanner-box">
+            <video id="qrVideo" playsinline muted></video>
+            <div class="scan-frame"></div>
+            <div id="scannerPlaceholder">
+              <div class="qr-glyph">▦</div>
+              <p>La cámara se abrirá al iniciar el lector.</p>
+            </div>
+          </div>
+          <div class="actions stacked-mobile">
+            <button id="startScanner" class="primary" type="button">Iniciar cámara</button>
+            <button id="stopScanner" class="secondary" type="button" disabled>Detener</button>
+          </div>
+          <p id="scannerStatus" class="hint">El lector automático usa BarcodeDetector en navegadores compatibles. GitHub Pages entrega HTTPS, necesario para la cámara.</p>
+        </article>
+
+        <article class="card">
+          <h3>Ingreso manual o confirmación</h3>
+          <form id="visitForm">
+            <label>Contenido del QR o código
+              <input name="rawCode" id="rawCode" placeholder='Ej.: HCFB|VISITA|UCI D|D37' required />
+            </label>
+            <div class="form-grid">
+              <label>Unidad<input name="unit" id="visitUnit" placeholder="Ej.: UPC Adulto" required /></label>
+              <label>Sector / cama<input name="location" id="visitLocation" placeholder="Ej.: D37" /></label>
+              <label>Motivo
+                <select name="reason">
+                  <option>Visita clínica</option>
+                  <option>Supervisión</option>
+                  <option>Evaluación de delirium</option>
+                  <option>Seguimiento de medidas</option>
+                  <option>Educación al equipo</option>
+                  <option>Otro</option>
+                </select>
+              </label>
+              <label>Observación<input name="note" maxlength="120" placeholder="Opcional" /></label>
+            </div>
+            <label class="check-row"><input type="checkbox" name="visited" checked /><span>Confirmo que se visitó la unidad o cama indicada.</span></label>
+            <button class="primary full" type="submit">Registrar asistencia y visita</button>
+          </form>
+        </article>
+
+        <div class="alert info">
+          <b>Formato recomendado del QR:</b> <code>HCFB|VISITA|UNIDAD|UBICACIÓN</code>. También acepta JSON con campos <code>unit</code> y <code>location</code>.
+        </div>
+      </section>
+
+      <section id="historial" class="view">
+        <div class="section-head">
+          <div><div class="eyebrow">Datos locales</div><h2>Historial</h2></div>
+          <button id="adminUnlock" class="secondary small">Administrar</button>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat"><span>Evaluaciones</span><strong id="statAssessments">0</strong></article>
+          <article class="stat"><span>Visitas</span><strong id="statVisits">0</strong></article>
+          <article class="stat"><span>Hoy</span><strong id="statToday">0</strong></article>
+        </div>
+
+        <div class="tabs history-tabs">
+          <button class="history-tab active" data-history="assessments">Evaluaciones</button>
+          <button class="history-tab" data-history="visits">Visitas QR</button>
+        </div>
+
+        <div id="historyList" class="history-list"></div>
+
+        <div id="adminActions" class="card hidden">
+          <h3>Panel administrativo</h3>
+          <p class="hint">El PIN local evita accesos casuales, pero no reemplaza seguridad institucional ni autenticación centralizada.</p>
+          <div class="actions stacked-mobile">
+            <button id="exportAssessments" class="primary">Exportar evaluaciones CSV</button>
+            <button id="exportVisits" class="primary">Exportar visitas CSV</button>
+            <button id="clearData" class="danger">Borrar todos los datos</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="config" class="view">
+        <div class="section-head"><div><div class="eyebrow">Configuración local</div><h2>Perfil y seguridad</h2></div></div>
+
+        <form id="profileForm">
+          <article class="card">
+            <h3>Datos del funcionario</h3>
+            <div class="form-grid">
+              <label>Nombre o identificador<input name="staffName" required placeholder="Ej.: Juan Mora" /></label>
+              <label>Rol
+                <select name="role">
+                  <option>Enfermero/a</option>
+                  <option>TENS</option>
+                  <option>Médico/a</option>
+                  <option>Kinesiólogo/a</option>
+                  <option>Terapeuta ocupacional</option>
+                  <option>Supervisor/a</option>
+                  <option>Otro</option>
+                </select>
+              </label>
+              <label>Unidad habitual<input name="defaultUnit" placeholder="Ej.: UPC Adulto" /></label>
+              <label>Turno
+                <select name="shift">
+                  <option>Día</option>
+                  <option>Noche</option>
+                  <option>Diurno</option>
+                  <option>Otro</option>
+                </select>
+              </label>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>PIN administrativo</h3>
+            <label>Nuevo PIN de 4 a 8 dígitos<input name="pin" inputmode="numeric" pattern="[0-9]{4,8}" maxlength="8" placeholder="Predeterminado: 2468" /></label>
+          </article>
+
+          <article class="card">
+            <h3>Privacidad y almacenamiento</h3>
+            <p>Esta versión guarda la información en el navegador del dispositivo mediante almacenamiento local. No sincroniza datos entre equipos.</p>
+            <label class="check-row"><input type="checkbox" name="privacyAccepted" required /><span>Entiendo que no debo registrar datos identificatorios sensibles de pacientes.</span></label>
+          </article>
+
+          <button class="primary full" type="submit">Guardar configuración</button>
+        </form>
+
+        <article class="card install-card">
+          <h3>Instalar aplicación</h3>
+          <p>En Android/Chrome, abre el menú del navegador y selecciona “Instalar aplicación” o “Agregar a pantalla de inicio”.</p>
+          <button id="installButton" class="secondary full">Instalar aplicación</button>
+          <p id="installStatus" class="hint">La instalación requiere abrir la app desde una dirección HTTPS, como GitHub Pages.</p>
+        </article>
+
+        <article class="card">
+          <h3>Acerca de esta versión</h3>
+          <p><b>Delirium HCFB v1.2</b></p>
+          <p>Aplicación estática preparada para GitHub Pages, con funcionamiento offline y sin servidor.</p>
+        </article>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Navegación principal">
+      <button class="nav-item active" data-view="inicio"><span>⌂</span><small>Inicio</small></button>
+      <button class="nav-item" data-view="evaluacion"><span>✚</span><small>Evaluar</small></button>
+      <button class="nav-item" data-view="flujo"><span>⇢</span><small>Flujo</small></button>
+      <button class="nav-item" data-view="medidas"><span>✓</span><small>Medidas</small></button>
+      <button class="nav-item" data-view="causas"><span>✚</span><small>Manejo</small></button>
+      <button class="nav-item" data-view="qr"><span>▦</span><small>QR</small></button>
+      <button class="nav-item" data-view="historial"><span>≡</span><small>Historial</small></button>
+    </nav>
+  </div>
+
+  <div id="toast" class="toast" role="status"></div>
+
+
+  <dialog id="installDialog">
+    <div class="dialog-card">
+      <h3>Cómo instalar la aplicación</h3>
+      <div id="installInstructions"></div>
+      <div class="actions"><button id="closeInstallDialog" class="primary" type="button">Entendido</button></div>
+    </div>
+  </dialog>
+
+  <dialog id="pinDialog">
+    <form method="dialog" id="pinForm" class="dialog-card">
+      <h3>Acceso administrativo</h3>
+      <label>Ingresa el PIN<input id="pinInput" type="password" inputmode="numeric" maxlength="8" required /></label>
+      <p id="pinError" class="error-text"></p>
+      <div class="actions"><button value="cancel" class="secondary">Cancelar</button><button value="default" id="confirmPin" class="primary">Ingresar</button></div>
+    </form>
+  </dialog>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>
