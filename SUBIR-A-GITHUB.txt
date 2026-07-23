@@ -1,0 +1,10 @@
+PASOS RÁPIDOS
+
+1. Descomprime delirium-hcfb.zip.
+2. Crea un repositorio nuevo en GitHub.
+3. Sube todo el contenido de la carpeta delirium-hcfb a la raíz.
+4. Abre Settings > Pages.
+5. Selecciona Deploy from a branch, rama main, carpeta /(root).
+6. Guarda y abre la URL que entrega GitHub.
+
+PIN administrativo inicial: 2468
